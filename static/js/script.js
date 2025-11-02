@@ -46,9 +46,6 @@ async function calculateUnitVector() {
     const vector = parseInput(vectorInput);
     if (!vector) return;
 
-    const button = event.target;
-    setButtonLoading(button, true);
-
     try {
         const response = await fetch('/unit_vector', {
             method: 'POST',
@@ -63,8 +60,6 @@ async function calculateUnitVector() {
         }
     } catch (error) {
         showResult('Error: ' + error.message);
-    } finally {
-        setButtonLoading(button, false);
     }
 }
 
