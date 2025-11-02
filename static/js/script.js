@@ -14,12 +14,30 @@ function showResult(message) {
     resultDiv.innerHTML = ''; // Clear previous content
     
     const strongEl = document.createElement('strong');
-    strongEl.textContent = 'Result: ';
+    strongEl.textContent = 'Result';
     
-    const messageEl = document.createTextNode(message);
+    const messageEl = document.createElement('div');
+    messageEl.textContent = message;
     
     resultDiv.appendChild(strongEl);
     resultDiv.appendChild(messageEl);
+    
+    // Scroll to result smoothly
+    resultDiv.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+
+// Helper function to show loading state
+function setButtonLoading(button, isLoading) {
+    if (isLoading) {
+        button.disabled = true;
+        button.dataset.originalText = button.textContent;
+        button.textContent = 'Processing...';
+    } else {
+        button.disabled = false;
+        if (button.dataset.originalText) {
+            button.textContent = button.dataset.originalText;
+        }
+    }
 }
 
 // Calculate Unit Vector
