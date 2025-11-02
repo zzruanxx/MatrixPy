@@ -41,7 +41,7 @@ def orthogonality():
     v2 = np.array(data['v2'])
     dot = np.dot(v1, v2)
     is_orthogonal = np.isclose(dot, 0)
-    return jsonify({'orthogonal': is_orthogonal, 'dot_product': dot})
+    return jsonify({'orthogonal': bool(is_orthogonal), 'dot_product': float(dot)})
 
 @app.route('/parallelism', methods=['POST'])
 def parallelism():
@@ -50,7 +50,7 @@ def parallelism():
     v2 = np.array(data['v2'])
     cross = np.cross(v1, v2)
     is_parallel = np.isclose(np.linalg.norm(cross), 0)
-    return jsonify({'parallel': is_parallel, 'cross_product': cross.tolist()})
+    return jsonify({'parallel': bool(is_parallel), 'cross_product': cross.tolist()})
 
 @app.route('/linear_combination', methods=['POST'])
 def linear_combination():
