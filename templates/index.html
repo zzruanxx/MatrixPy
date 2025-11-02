@@ -3,64 +3,78 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Interactive Linear Algebra Calculator</title>
-    <style>
-        body { font-family: Arial, sans-serif; margin: 20px; }
-        input { margin: 5px; }
-        button { margin: 10px; padding: 10px; }
-        #result { margin-top: 20px; }
-        #canvas { width: 100%; height: 400px; }
-    </style>
+    <title>MatrixPy - Interactive Linear Algebra Calculator</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
 </head>
 <body>
-    <h1>Interactive Linear Algebra Calculator</h1>
+    <div class="container">
+        <h1>MatrixPy - Interactive Linear Algebra Calculator</h1>
 
-    <h2>Unit Vector</h2>
-    <input type="text" id="vectorInput" placeholder="Vector (e.g., [1,2,3])">
-    <button onclick="calculateUnitVector()">Calculate Unit Vector</button>
+        <div class="operation-section">
+            <h2>Unit Vector (Normalization)</h2>
+            <input type="text" id="vectorInput" placeholder="Enter vector (e.g., [1,2,3] or [3,4])">
+            <button onclick="calculateUnitVector()">Calculate Unit Vector</button>
+        </div>
 
-    <h2>Angle Between Vectors</h2>
-    <input type="text" id="v1Input" placeholder="Vector 1">
-    <input type="text" id="v2Input" placeholder="Vector 2">
-    <button onclick="calculateAngle()">Calculate Angle</button>
+        <div class="operation-section">
+            <h2>Angle Between Vectors</h2>
+            <input type="text" id="v1Input" placeholder="Vector 1 (e.g., [1,0,0])">
+            <input type="text" id="v2Input" placeholder="Vector 2 (e.g., [0,1,0])">
+            <button onclick="calculateAngle()">Calculate Angle</button>
+        </div>
 
-    <h2>Orthogonality Check</h2>
-    <input type="text" id="orthV1" placeholder="Vector 1">
-    <input type="text" id="orthV2" placeholder="Vector 2">
-    <button onclick="checkOrthogonality()">Check</button>
+        <div class="operation-section">
+            <h2>Orthogonality Check</h2>
+            <input type="text" id="orthV1" placeholder="Vector 1 (e.g., [1,0])">
+            <input type="text" id="orthV2" placeholder="Vector 2 (e.g., [0,1])">
+            <button onclick="checkOrthogonality()">Check Orthogonality</button>
+        </div>
 
-    <h2>Parallelism Check</h2>
-    <input type="text" id="parV1" placeholder="Vector 1">
-    <input type="text" id="parV2" placeholder="Vector 2">
-    <button onclick="checkParallelism()">Check</button>
+        <div class="operation-section">
+            <h2>Parallelism Check</h2>
+            <input type="text" id="parV1" placeholder="Vector 1 (e.g., [2,4,6])">
+            <input type="text" id="parV2" placeholder="Vector 2 (e.g., [1,2,3])">
+            <button onclick="checkParallelism()">Check Parallelism</button>
+        </div>
 
-    <h2>Linear Combination</h2>
-    <input type="text" id="vectorsInput" placeholder="Vectors (e.g., [[1,2],[3,4]])">
-    <input type="text" id="coeffInput" placeholder="Coefficients (e.g., [2,3])">
-    <button onclick="calculateLinearCombination()">Calculate</button>
+        <div class="operation-section">
+            <h2>Linear Combination</h2>
+            <input type="text" id="vectorsInput" placeholder="Vectors (e.g., [[1,2],[3,4]])">
+            <input type="text" id="coeffInput" placeholder="Coefficients (e.g., [2,3])">
+            <button onclick="calculateLinearCombination()">Calculate Linear Combination</button>
+        </div>
 
-    <h2>Solve System Ax = b</h2>
-    <input type="text" id="AInput" placeholder="Matrix A (coefficients)">
-    <input type="text" id="bInput" placeholder="Vector b">
-    <button onclick="solveSystem()">Solve</button>
+        <div class="operation-section">
+            <h2>Solve Linear System Ax = b</h2>
+            <input type="text" id="AInput" placeholder="Matrix A (e.g., [[2,1],[1,3]])">
+            <input type="text" id="bInput" placeholder="Vector b (e.g., [5,7])">
+            <button onclick="solveSystem()">Solve System</button>
+        </div>
 
-    <h2>Matrix Transpose</h2>
-    <input type="text" id="matrixInput" placeholder="Matrix (e.g., [[1,2],[3,4]])">
-    <button onclick="transposeMatrix()">Transpose</button>
+        <div class="operation-section">
+            <h2>Matrix Transpose</h2>
+            <input type="text" id="matrixInput" placeholder="Matrix (e.g., [[1,2,3],[4,5,6]])">
+            <button onclick="transposeMatrix()">Transpose Matrix</button>
+        </div>
 
-    <h2>Matrix Multiplication</h2>
-    <input type="text" id="m1Input" placeholder="Matrix 1">
-    <input type="text" id="m2Input" placeholder="Matrix 2">
-    <button onclick="multiplyMatrices()">Multiply</button>
+        <div class="operation-section">
+            <h2>Matrix Multiplication</h2>
+            <input type="text" id="m1Input" placeholder="Matrix 1 (e.g., [[1,2],[3,4]])">
+            <input type="text" id="m2Input" placeholder="Matrix 2 (e.g., [[5,6],[7,8]])">
+            <button onclick="multiplyMatrices()">Multiply Matrices</button>
+        </div>
 
-    <h2>Vector Visualization (3D)</h2>
-    <input type="text" id="visV1" placeholder="Vector 1 (e.g., [1,2,3])">
-    <input type="text" id="visV2" placeholder="Vector 2">
-    <button onclick="visualizeVectors()">Visualize</button>
-    <div id="canvas"></div>
+        <div class="operation-section">
+            <h2>Vector Visualization (2D/3D)</h2>
+            <input type="text" id="visV1" placeholder="Vector 1 (e.g., [1,2,3])">
+            <input type="text" id="visV2" placeholder="Vector 2 (optional, e.g., [3,-1,2])">
+            <button onclick="visualizeVectors()">Visualize Vectors</button>
+            <div id="canvas"></div>
+        </div>
 
-    <div id="result"></div>
+        <div id="result"></div>
+    </div>
 
     <script src="{{ url_for('static', filename='js/script.js') }}"></script>
 </body>
