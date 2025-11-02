@@ -10,7 +10,16 @@ function parseInput(input) {
 
 // Helper function to display results
 function showResult(message) {
-    document.getElementById('result').innerHTML = '<strong>Result:</strong> ' + message;
+    const resultDiv = document.getElementById('result');
+    resultDiv.innerHTML = ''; // Clear previous content
+    
+    const strongEl = document.createElement('strong');
+    strongEl.textContent = 'Result: ';
+    
+    const messageEl = document.createTextNode(message);
+    
+    resultDiv.appendChild(strongEl);
+    resultDiv.appendChild(messageEl);
 }
 
 // Calculate Unit Vector
