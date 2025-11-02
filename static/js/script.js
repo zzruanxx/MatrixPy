@@ -313,9 +313,10 @@ function visualizeVectorsCanvas(v1, v2Input) {
     ctx.fillText('Y', centerX + 10, 20);
     
     // Show result message for 3D vectors
-    if (v1.length > 2 || (v2Input.trim() !== '' && parseInput(v2Input) && parseInput(v2Input).length > 2)) {
+    const v2 = v2Input.trim() !== '' ? parseInput(v2Input) : null;
+    if (v1.length > 2 || (v2 && v2.length > 2)) {
         showResult('2D projection shown. Z-components: V1[' + (v1[2] || 0) + '], V2[' + 
-                   (v2Input.trim() !== '' && parseInput(v2Input) ? (parseInput(v2Input)[2] || 0) : 0) + ']');
+                   (v2 ? (v2[2] || 0) : 0) + ']');
     } else {
         showResult('Vector visualization completed');
     }
