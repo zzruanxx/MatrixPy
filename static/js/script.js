@@ -3,18 +3,28 @@ function parseInput(input) {
     try {
         return JSON.parse(input);
     } catch (e) {
-        showResult('Error: Invalid input format. Use JSON format like [1,2,3] or [[1,2],[3,4]]');
+        showResult('Invalid input format. Please use JSON format like [1,2,3] or [[1,2],[3,4]]', true);
         return null;
     }
 }
 
 // Helper function to display results
-function showResult(message) {
+function showResult(message, isError = false) {
     const resultDiv = document.getElementById('result');
     resultDiv.innerHTML = ''; // Clear previous content
     
+    // Remove previous classes
+    resultDiv.classList.remove('success', 'error');
+    
+    // Add appropriate class
+    if (isError) {
+        resultDiv.classList.add('error');
+    } else {
+        resultDiv.classList.add('success');
+    }
+    
     const strongEl = document.createElement('strong');
-    strongEl.textContent = 'Result';
+    strongEl.textContent = isError ? 'Error' : 'Result';
     
     const messageEl = document.createElement('div');
     messageEl.textContent = message;
@@ -42,10 +52,12 @@ function setButtonLoading(button, isLoading) {
 
 // Calculate Unit Vector
 async function calculateUnitVector() {
+    const button = event.target;
     const vectorInput = document.getElementById('vectorInput').value;
     const vector = parseInput(vectorInput);
     if (!vector) return;
 
+    setButtonLoading(button, true);
     try {
         const response = await fetch('/unit_vector', {
             method: 'POST',
@@ -54,21 +66,25 @@ async function calculateUnitVector() {
         });
         const data = await response.json();
         if (data.error) {
-            showResult('Error: ' + data.error);
+            showResult(data.error, true);
         } else {
             showResult('Unit Vector: [' + data.unit_vector.map(v => v.toFixed(4)).join(', ') + ']');
         }
     } catch (error) {
-        showResult('Error: ' + error.message);
+        showResult('Connection error: ' + error.message, true);
+    } finally {
+        setButtonLoading(button, false);
     }
 }
 
 // Calculate Angle Between Vectors
 async function calculateAngle() {
+    const button = event.target;
     const v1 = parseInput(document.getElementById('v1Input').value);
     const v2 = parseInput(document.getElementById('v2Input').value);
     if (!v1 || !v2) return;
 
+    setButtonLoading(button, true);
     try {
         const response = await fetch('/angle_between', {
             method: 'POST',
@@ -77,21 +93,25 @@ async function calculateAngle() {
         });
         const data = await response.json();
         if (data.error) {
-            showResult('Error: ' + data.error);
+            showResult(data.error, true);
         } else {
             showResult('Angle: ' + data.angle.toFixed(2) + '° (degrees)');
         }
     } catch (error) {
-        showResult('Error: ' + error.message);
+        showResult('Connection error: ' + error.message, true);
+    } finally {
+        setButtonLoading(button, false);
     }
 }
 
 // Check Orthogonality
 async function checkOrthogonality() {
+    const button = event.target;
     const v1 = parseInput(document.getElementById('orthV1').value);
     const v2 = parseInput(document.getElementById('orthV2').value);
     if (!v1 || !v2) return;
 
+    setButtonLoading(button, true);
     try {
         const response = await fetch('/orthogonality', {
             method: 'POST',
@@ -99,19 +119,23 @@ async function checkOrthogonality() {
             body: JSON.stringify({ v1: v1, v2: v2 })
         });
         const data = await response.json();
-        const result = data.orthogonal ? 'Yes, vectors are orthogonal' : 'No, vectors are not orthogonal';
+        const result = data.orthogonal ? '✓ Yes, vectors are orthogonal' : '✗ No, vectors are not orthogonal';
         showResult(result + ' (dot product: ' + data.dot_product.toFixed(4) + ')');
     } catch (error) {
-        showResult('Error: ' + error.message);
+        showResult('Connection error: ' + error.message, true);
+    } finally {
+        setButtonLoading(button, false);
     }
 }
 
 // Check Parallelism
 async function checkParallelism() {
+    const button = event.target;
     const v1 = parseInput(document.getElementById('parV1').value);
     const v2 = parseInput(document.getElementById('parV2').value);
     if (!v1 || !v2) return;
 
+    setButtonLoading(button, true);
     try {
         const response = await fetch('/parallelism', {
             method: 'POST',
@@ -119,19 +143,23 @@ async function checkParallelism() {
             body: JSON.stringify({ v1: v1, v2: v2 })
         });
         const data = await response.json();
-        const result = data.parallel ? 'Yes, vectors are parallel' : 'No, vectors are not parallel';
+        const result = data.parallel ? '✓ Yes, vectors are parallel' : '✗ No, vectors are not parallel';
         showResult(result + ' (cross product: [' + data.cross_product.map(v => v.toFixed(4)).join(', ') + '])');
     } catch (error) {
-        showResult('Error: ' + error.message);
+        showResult('Connection error: ' + error.message, true);
+    } finally {
+        setButtonLoading(button, false);
     }
 }
 
 // Calculate Linear Combination
 async function calculateLinearCombination() {
+    const button = event.target;
     const vectors = parseInput(document.getElementById('vectorsInput').value);
     const coefficients = parseInput(document.getElementById('coeffInput').value);
     if (!vectors || !coefficients) return;
 
+    setButtonLoading(button, true);
     try {
         const response = await fetch('/linear_combination', {
             method: 'POST',
@@ -139,18 +167,26 @@ async function calculateLinearCombination() {
             body: JSON.stringify({ vectors: vectors, coefficients: coefficients })
         });
         const data = await response.json();
-        showResult('Linear Combination: [' + data.result.map(v => v.toFixed(4)).join(', ') + ']');
+        if (data.error) {
+            showResult(data.error, true);
+        } else {
+            showResult('Linear Combination: [' + data.result.map(v => v.toFixed(4)).join(', ') + ']');
+        }
     } catch (error) {
-        showResult('Error: ' + error.message);
+        showResult('Connection error: ' + error.message, true);
+    } finally {
+        setButtonLoading(button, false);
     }
 }
 
 // Solve System
 async function solveSystem() {
+    const button = event.target;
     const A = parseInput(document.getElementById('AInput').value);
     const b = parseInput(document.getElementById('bInput').value);
     if (!A || !b) return;
 
+    setButtonLoading(button, true);
     try {
         const response = await fetch('/solve_system', {
             method: 'POST',
@@ -159,20 +195,24 @@ async function solveSystem() {
         });
         const data = await response.json();
         if (data.error) {
-            showResult('Error: ' + data.error);
+            showResult(data.error, true);
         } else {
             showResult('Solution x: [' + data.solution.map(v => v.toFixed(4)).join(', ') + ']');
         }
     } catch (error) {
-        showResult('Error: ' + error.message);
+        showResult('Connection error: ' + error.message, true);
+    } finally {
+        setButtonLoading(button, false);
     }
 }
 
 // Transpose Matrix
 async function transposeMatrix() {
+    const button = event.target;
     const matrix = parseInput(document.getElementById('matrixInput').value);
     if (!matrix) return;
 
+    setButtonLoading(button, true);
     try {
         const response = await fetch('/matrix_transpose', {
             method: 'POST',
@@ -180,18 +220,26 @@ async function transposeMatrix() {
             body: JSON.stringify({ matrix: matrix })
         });
         const data = await response.json();
-        showResult('Transpose: ' + JSON.stringify(data.transpose));
+        if (data.error) {
+            showResult(data.error, true);
+        } else {
+            showResult('Transpose: ' + JSON.stringify(data.transpose));
+        }
     } catch (error) {
-        showResult('Error: ' + error.message);
+        showResult('Connection error: ' + error.message, true);
+    } finally {
+        setButtonLoading(button, false);
     }
 }
 
 // Multiply Matrices
 async function multiplyMatrices() {
+    const button = event.target;
     const m1 = parseInput(document.getElementById('m1Input').value);
     const m2 = parseInput(document.getElementById('m2Input').value);
     if (!m1 || !m2) return;
 
+    setButtonLoading(button, true);
     try {
         const response = await fetch('/matrix_multiply', {
             method: 'POST',
@@ -200,12 +248,14 @@ async function multiplyMatrices() {
         });
         const data = await response.json();
         if (data.error) {
-            showResult('Error: ' + data.error);
+            showResult(data.error, true);
         } else {
             showResult('Product: ' + JSON.stringify(data.product));
         }
     } catch (error) {
-        showResult('Error: ' + error.message);
+        showResult('Connection error: ' + error.message, true);
+    } finally {
+        setButtonLoading(button, false);
     }
 }
 
@@ -384,3 +434,50 @@ function drawVector(ctx, startX, startY, dx, dy, color, label) {
     ctx.font = 'bold 14px Arial';
     ctx.fillText(label, endX + 10, endY - 10);
 }
+
+// Clear input fields in a section
+function clearSection(sectionElement) {
+    const inputs = sectionElement.querySelectorAll('input[type="text"]');
+    inputs.forEach(input => input.value = '');
+    
+    // Clear the canvas if it's the visualization section
+    const canvas = sectionElement.querySelector('#canvas');
+    if (canvas) {
+        canvas.innerHTML = '';
+    }
+}
+
+// Add keyboard support - Enter key to submit
+document.addEventListener('DOMContentLoaded', function() {
+    // Add Enter key support for all text inputs
+    const allInputs = document.querySelectorAll('input[type="text"]');
+    allInputs.forEach(input => {
+        input.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                // Find the button in the same section
+                const section = input.closest('.operation-section');
+                const button = section.querySelector('button');
+                if (button) {
+                    button.click();
+                }
+            }
+        });
+    });
+    
+    // Add clear buttons to each section
+    const sections = document.querySelectorAll('.operation-section');
+    sections.forEach(section => {
+        const heading = section.querySelector('h2');
+        if (heading) {
+            const clearBtn = document.createElement('button');
+            clearBtn.textContent = '✕ Clear';
+            clearBtn.className = 'clear-btn';
+            clearBtn.onclick = function(e) {
+                e.preventDefault();
+                clearSection(section);
+            };
+            heading.appendChild(clearBtn);
+        }
+    });
+});

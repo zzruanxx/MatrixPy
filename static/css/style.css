@@ -51,6 +51,10 @@ h2 {
     padding-bottom: 12px;
     text-align: center;
     font-weight: 600;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
 }
 
 .operation-section {
@@ -125,6 +129,24 @@ button:disabled {
     transform: none;
 }
 
+button.clear-btn {
+    background: #6c757d;
+    padding: 6px 14px;
+    font-size: 12px;
+    min-width: auto;
+    margin: 0;
+    margin-left: auto;
+    position: absolute;
+    right: 0;
+    display: inline-block;
+    box-shadow: 0 2px 8px rgba(108, 117, 125, 0.3);
+}
+
+button.clear-btn:hover {
+    background: #5a6268;
+    box-shadow: 0 4px 12px rgba(108, 117, 125, 0.4);
+}
+
 #result {
     margin-top: 30px;
     padding: 24px;
@@ -141,6 +163,16 @@ button:disabled {
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
 }
 
+#result.success {
+    background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
+    border-left-color: #28a745;
+}
+
+#result.error {
+    background: linear-gradient(135deg, #f8d7da 0%, #f5c6cb 100%);
+    border-left-color: #dc3545;
+}
+
 #result:not(:empty) {
     opacity: 1;
     visibility: visible;
@@ -152,6 +184,14 @@ button:disabled {
     font-size: 18px;
     display: block;
     margin-bottom: 8px;
+}
+
+#result.success strong {
+    color: #28a745;
+}
+
+#result.error strong {
+    color: #dc3545;
 }
 
 #canvas {
